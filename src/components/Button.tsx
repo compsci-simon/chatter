@@ -2,11 +2,13 @@ import React, { FC, MouseEventHandler, ReactNode } from 'react'
 
 interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>
-  children: ReactNode
+  children: ReactNode,
+  primary?: boolean
+  secondary?: boolean
 }
 const Button: FC<ButtonProps> = ({ onClick, children }) => {
   return (
-    <button onClick={onClick} className='border border-violet-300 p-3 bg-gradient-to-b from-blue-600 to-violet-400 rounded-lg text-white'>
+    <button onClick={onClick} className='p-3 bg-violet-400 rounded-lg outline-none text-white'>
       {children}
     </button>
   )
