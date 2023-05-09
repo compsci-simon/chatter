@@ -32,7 +32,7 @@ const ChatRoom: NextPage = () => {
           { 'justify-end': message.author === username },
         )
         const innerClasses = classnames('text-black flex flex-col p-2 rounded-lg w-[80%]',
-          { 'bg-white': message.author !== username },
+          { 'bg-slate-200': message.author !== username },
           { 'bg-green-300': message.author === username },
         )
         return <div role='scrollable-content' className={outerClasses}>
