@@ -5,7 +5,7 @@ import Button from "~/components/Button";
 import TextField from "~/components/TextField";
 
 const ChatRoom: NextPage = () => {
-  const messages = [
+  let messages = [
     {
       author: 'john',
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
@@ -23,16 +23,17 @@ const ChatRoom: NextPage = () => {
       content: 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
     }
   ]
+  messages = Array.from({ length: 10 }, () => messages).flat()
 
   const renderMessages = (username: string) => {
     return <div className="flex flex-col gap-5">
       {messages.map((message, index) => {
         const outerClass = classnames('w-full flex',
-          { 'align-end': message.author === username },
-          { 'align-start': message.author !== username },
+          { 'justify-end': message.author === username },
         )
-        const classes = classnames('bg-white text-black flex flex-col p-2 rounded-lg w-[80%]',
-
+        const classes = classnames('text-black flex flex-col p-2 rounded-lg w-[80%]',
+          { 'bg-white': message.author !== username },
+          { 'bg-green-300': message.author === username },
         )
         return <div className={outerClass}>
           <div key={index} className={classes}>
