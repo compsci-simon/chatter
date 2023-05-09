@@ -1,33 +1,42 @@
 import classnames from "classnames";
 import { NextPage } from "next";
-import { Head } from "next/document";
 import { useEffect, useRef, useState } from "react";
 import Button from "~/components/Button";
 import TextField from "~/components/TextField";
 import { api } from "~/utils/api";
+import { Post } from "@prisma/client";
 
-let messages = [
+let m: Post[] = [
   {
+    id: 'asf',
     author: 'john',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
+    createdAt: new Date(2023, 4, 9)
   },
   {
+    id: '1234',
     author: 'hannah',
-    content: 'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur'
+    content: 'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
+    createdAt: new Date(2023, 4, 8)
   },
   {
+    id: 'fg',
     author: 'Jill',
-    content: 'Excepteur sint occaecat cupidatat non'
+    content: 'Excepteur sint occaecat cupidatat non',
+    createdAt: new Date(2023, 4, 7)
   },
   {
+    id: 'sg',
     author: 'Jack',
-    content: 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    content: 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    createdAt: new Date(2023, 4, 6)
   }
 ]
-messages = Array.from({ length: 10 }, () => messages).flat()
+m = Array.from({ length: 10 }, () => m).flat()
 const ChatRoom: NextPage = () => {
   const scrollableRef = useRef<HTMLDivElement>(null)
   const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState(m)
   const { mutate: sendMessageMutation } = api.message.send.useMutation()
 
   const scrollToBottom = () => {
@@ -50,7 +59,7 @@ const ChatRoom: NextPage = () => {
         return <div key={index} role='scrollable-content' className={outerClasses}>
           <div className={innerClasses}>
             <span className="font-light text-xs">
-              {message.author}
+              {message.author} - {message.createdAt.toUTCString()}
             </span>
             <p>
               {message.content}
@@ -64,9 +73,15 @@ const ChatRoom: NextPage = () => {
   useEffect(() => {
     scrollToBottom()
   }, [])
+  // subscribe to new posts and add
+  api.message.onAdd.useSubscription(undefined, {
+    onData(data) {
+      setMessages([...messages, data])
+    }
+  })
 
   const sendMessage = () => {
-    sendMessageMutation({ message: message }, {
+    sendMessageMutation({ author: 'john', content: message }, {
       onSuccess: (data) => {
         console.log(data)
       }
