@@ -28,15 +28,15 @@ const ChatRoom: NextPage = () => {
   const renderMessages = (username: string) => {
     return <div className="flex flex-col gap-5">
       {messages.map((message, index) => {
-        const outerClass = classnames('w-full flex',
+        const outerClasses = classnames('w-full flex',
           { 'justify-end': message.author === username },
         )
-        const classes = classnames('text-black flex flex-col p-2 rounded-lg w-[80%]',
+        const innerClasses = classnames('text-black flex flex-col p-2 rounded-lg w-[80%]',
           { 'bg-white': message.author !== username },
           { 'bg-green-300': message.author === username },
         )
-        return <div className={outerClass}>
-          <div key={index} className={classes}>
+        return <div role='scrollable-content' className={outerClasses}>
+          <div key={index} className={innerClasses}>
             <span className="font-light text-xs">
               {message.author}
             </span>
@@ -51,10 +51,12 @@ const ChatRoom: NextPage = () => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
       <div className="w-[800px] h-[100vh]  flex flex-col gap-10 p-10 relative z-0">
-        <div className="bg-slate-900 rounded-xl grow opacity-20 p-5 absolute z-10 left-5 right-5 top-5 bottom-5">
+        <div className="grow relative overflow-hidden z-10">
+          <div className="grow w-full h-full p-5 relative scroll-auto overflow-auto">
+            {renderMessages('john')}
+          </div>
         </div>
-        <div className="grow p-5">
-          {renderMessages('john')}
+        <div className="bg-slate-900 rounded-xl grow opacity-20 p-5 absolute z-0 left-5 right-5 top-5 bottom-5">
         </div>
         <div className="flex gap-5 justify-end">
           <TextField />
