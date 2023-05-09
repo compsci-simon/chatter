@@ -81,7 +81,7 @@ const ChatRoom: NextPage = () => {
         </div>
         <div className="bg-slate-900 rounded-xl grow opacity-20 p-5 absolute z-0 left-5 right-5 top-5 bottom-5">
         </div>
-        <div className="flex gap-5 justify-end">
+        <div className="flex gap-5 justify-end z-10">
           <TextField value={message} onChange={e => setMessage(e.target.value)} />
           <Button onClick={sendMessage}>Send</Button>
         </div>
