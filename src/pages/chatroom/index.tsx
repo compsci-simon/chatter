@@ -1,9 +1,10 @@
 import classnames from "classnames";
 import { NextPage } from "next";
 import { Head } from "next/document";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "~/components/Button";
 import TextField from "~/components/TextField";
+import { api } from "~/utils/api";
 
 let messages = [
   {
@@ -26,6 +27,8 @@ let messages = [
 messages = Array.from({ length: 10 }, () => messages).flat()
 const ChatRoom: NextPage = () => {
   const scrollableRef = useRef<HTMLDivElement>(null)
+  const [message, setMessage] = useState('')
+  const { mutate: sendMessageMutation } = api.message.send.useMutation()
 
   const scrollToBottom = () => {
     if (scrollableRef.current) {
@@ -62,6 +65,14 @@ const ChatRoom: NextPage = () => {
     scrollToBottom()
   }, [])
 
+  const sendMessage = () => {
+    sendMessageMutation({ message: message }, {
+      onSuccess: (data) => {
+        console.log(data)
+      }
+    })
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
       <div className="w-[800px] h-[100vh]  flex flex-col gap-10 p-10 relative z-0">
@@ -71,8 +82,8 @@ const ChatRoom: NextPage = () => {
         <div className="bg-slate-900 rounded-xl grow opacity-20 p-5 absolute z-0 left-5 right-5 top-5 bottom-5">
         </div>
         <div className="flex gap-5 justify-end">
-          <TextField />
-          <Button>Send</Button>
+          <TextField value={message} onChange={e => setMessage(e.target.value)} />
+          <Button onClick={sendMessage}>Send</Button>
         </div>
       </div>
     </main>
