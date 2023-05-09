@@ -47,8 +47,8 @@ const ChatRoom: NextPage = () => {
           { 'bg-slate-200': message.author !== username },
           { 'bg-green-300': message.author === username },
         )
-        return <div role='scrollable-content' className={outerClasses}>
-          <div key={index} className={innerClasses}>
+        return <div key={index} role='scrollable-content' className={outerClasses}>
+          <div className={innerClasses}>
             <span className="font-light text-xs">
               {message.author}
             </span>
