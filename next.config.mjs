@@ -18,5 +18,9 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  publicRuntimeConfig: {
+    WS_URL: 'ws://localhost:3001',
+    APP_URL: 'http://localhost:300'
+  }
 };
 export default config;
