@@ -105,6 +105,7 @@ const ChatRoom: NextPage = () => {
   })
 
   const sendMessage = () => {
+    setMessage('')
     sendMessageMutation({ author, content: message }, {
       onSuccess: (data) => {
         console.log(data)
