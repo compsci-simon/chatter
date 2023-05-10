@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { NextPage } from "next";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "~/components/Button";
 import TextField from "~/components/TextField";
 import { api } from "~/utils/api";
@@ -8,22 +8,57 @@ import { Post } from "@prisma/client";
 import { useRouter } from "next/router";
 
 const ChatRoom: NextPage = () => {
-  const router = useRouter()
+  const postsQuery = api.message.infinite.useInfiniteQuery({},
+    {
+      getPreviousPageParam: (d) => d.prevCursor
+    }
+  )
+  const { hasPreviousPage, isFetchingPreviousPage, fetchPreviousPage } = postsQuery
+  const [messages, setMessages] = useState<Post[]>(() => {
+    const msgs = postsQuery.data?.pages.map(page => page.items).flat() ?? []
+    return msgs
+  })
+
   const scrollableRef = useRef<HTMLDivElement>(null)
+
+  const addMessages = useCallback((incoming?: Post[]) => {
+    setMessages((current) => {
+      const map: Record<Post['id'], Post> = {}
+      for (const msg of current ?? []) {
+        map[msg.id] = msg
+      }
+      for (const msg of incoming ?? []) {
+        map[msg.id] = msg
+      }
+      return Object.values(map).sort(
+        (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+      )
+    })
+  }, [])
+
+  useEffect(() => {
+    const msgs = postsQuery.data?.pages.map(page => page.items).flat()
+    addMessages(msgs)
+  }, [postsQuery.data?.pages, addMessages])
+
+  const router = useRouter()
   const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState<Post[]>([])
   const [author, setAuthor] = useState<string>('')
   const [chatroom, setChatroom] = useState<string>('')
   const { mutate: sendMessageMutation } = api.message.send.useMutation()
 
   const { username: usernameParam, chatroom: chatroomParam } = router.query
 
-  const scrollToBottom = () => {
-    if (scrollableRef.current) {
-      const scrollableElement = scrollableRef.current;
-      scrollableElement.scrollTop = scrollableElement.scrollHeight;
+  const scrollToBottomOfList = useCallback(() => {
+    if (scrollableRef.current == null) {
+      return
+    } else {
+      scrollableRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end'
+      })
     }
-  };
+  }, [scrollableRef])
 
   const renderMessages = (username: string) => {
     return <div className="flex flex-col gap-5">
@@ -48,10 +83,6 @@ const ChatRoom: NextPage = () => {
       })}
     </div>
   }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [])
 
   useEffect(() => {
     if (!usernameParam) {
@@ -81,10 +112,9 @@ const ChatRoom: NextPage = () => {
       }
     }
   }, [usernameParam, chatroomParam])
-
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    scrollToBottomOfList()
+  }, [])
   // subscribe to new posts and add
   api.message.onAdd.useSubscription(undefined, {
     onData(data) {
