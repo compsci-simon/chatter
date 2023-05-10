@@ -6,40 +6,12 @@ import TextField from "~/components/TextField";
 import { api } from "~/utils/api";
 import { Post } from "@prisma/client";
 import { useRouter } from "next/router";
-import { string } from "zod";
 
-let m: Post[] = [
-  {
-    id: 'asf',
-    author: 'john',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-    createdAt: new Date(2023, 4, 9)
-  },
-  {
-    id: '1234',
-    author: 'hannah',
-    content: 'nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
-    createdAt: new Date(2023, 4, 8)
-  },
-  {
-    id: 'fg',
-    author: 'Jill',
-    content: 'Excepteur sint occaecat cupidatat non',
-    createdAt: new Date(2023, 4, 7)
-  },
-  {
-    id: 'sg',
-    author: 'Jack',
-    content: 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    createdAt: new Date(2023, 4, 6)
-  }
-]
-m = Array.from({ length: 10 }, () => m).flat()
 const ChatRoom: NextPage = () => {
   const router = useRouter()
   const scrollableRef = useRef<HTMLDivElement>(null)
   const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState(m)
+  const [messages, setMessages] = useState<Post[]>([])
   const [author, setAuthor] = useState<string>('')
   const [chatroom, setChatroom] = useState<string>('')
   const { mutate: sendMessageMutation } = api.message.send.useMutation()
