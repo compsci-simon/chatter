@@ -8,7 +8,7 @@ const ee = new EventEmitter()
 
 export const messageRouter = createTRPCRouter({
   send: publicProcedure
-    .input(z.object({ author: z.string(), content: z.string() }))
+    .input(z.object({ author: z.string(), content: z.string(), chatroom: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const post = await ctx.prisma.post.create({
         data: { ...input }

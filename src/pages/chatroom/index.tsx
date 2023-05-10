@@ -41,10 +41,10 @@ const ChatRoom: NextPage = () => {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState(m)
   const [author, setAuthor] = useState<string>('')
+  const [chatroom, setChatroom] = useState<string>('')
   const { mutate: sendMessageMutation } = api.message.send.useMutation()
 
-  const { username } = router.query
-  console.log('username', username)
+  const { username: usernameParam, chatroom: chatroomParam } = router.query
 
   const scrollToBottom = () => {
     if (scrollableRef.current) {
@@ -78,21 +78,37 @@ const ChatRoom: NextPage = () => {
   }
 
   useEffect(() => {
-    if (!username) {
+    scrollToBottom()
+  }, [])
+
+  useEffect(() => {
+    if (!usernameParam) {
       router.push('/')
-    } else if (username) {
-      if (Array.isArray(username)) {
-        if (typeof (username[0]) === 'string' && username[0]) {
-          setAuthor(username[0])
+    } else if (usernameParam) {
+      if (Array.isArray(usernameParam)) {
+        if (typeof (usernameParam[0]) === 'string' && usernameParam[0]) {
+          setAuthor(usernameParam[0])
         } else {
           router.push('/')
         }
       } else {
-        setAuthor(username)
+        setAuthor(usernameParam)
       }
     }
-    scrollToBottom()
-  }, [username])
+    if (!chatroomParam) {
+      router.push('/')
+    } else if (chatroomParam) {
+      if (Array.isArray(chatroomParam)) {
+        if (typeof (chatroomParam[0]) === 'string' && chatroomParam[0]) {
+          setChatroom(chatroomParam[0])
+        } else {
+          router.push('/')
+        }
+      } else {
+        setChatroom(chatroomParam)
+      }
+    }
+  }, [usernameParam, chatroomParam])
 
   useEffect(() => {
     scrollToBottom()
@@ -110,7 +126,7 @@ const ChatRoom: NextPage = () => {
 
   const sendMessage = () => {
     setMessage('')
-    sendMessageMutation({ author, content: message }, {
+    sendMessageMutation({ author, content: message, chatroom }, {
       onSuccess: (data) => {
         console.log(data)
       }
