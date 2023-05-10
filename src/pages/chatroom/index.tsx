@@ -93,6 +93,10 @@ const ChatRoom: NextPage = () => {
     }
     scrollToBottom()
   }, [username])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
   // subscribe to new posts and add
   api.message.onAdd.useSubscription(undefined, {
     onData(data) {
