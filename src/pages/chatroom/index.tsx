@@ -6,6 +6,7 @@ import TextField from "~/components/TextField";
 import { api } from "~/utils/api";
 import { Post } from "@prisma/client";
 import { useRouter } from "next/router";
+import { string } from "zod";
 
 let m: Post[] = [
   {
@@ -39,6 +40,7 @@ const ChatRoom: NextPage = () => {
   const scrollableRef = useRef<HTMLDivElement>(null)
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState(m)
+  const [author, setAuthor] = useState<string>('')
   const { mutate: sendMessageMutation } = api.message.send.useMutation()
 
   const { username } = router.query
@@ -78,22 +80,32 @@ const ChatRoom: NextPage = () => {
   useEffect(() => {
     if (!username) {
       router.push('/')
+    } else if (username) {
+      if (Array.isArray(username)) {
+        if (typeof (username[0]) === 'string' && username[0]) {
+          setAuthor(username[0])
+        } else {
+          router.push('/')
+        }
+      } else {
+        setAuthor(username)
+      }
     }
     scrollToBottom()
   }, [username])
   // subscribe to new posts and add
-  // api.message.onAdd.useSubscription(undefined, {
-  //   onData(data) {
-  //     setMessages([...messages, data])
-  //   },
-  //   onError(err) {
-  //     console.error('Subscription error:', err);
-  //     // we might have missed a message - invalidate cache
-  //   },
-  // })
+  api.message.onAdd.useSubscription(undefined, {
+    onData(data) {
+      setMessages([...messages, data])
+    },
+    onError(err) {
+      console.error('Subscription error:', err);
+      // we might have missed a message - invalidate cache
+    },
+  })
 
   const sendMessage = () => {
-    sendMessageMutation({ author: 'john', content: message }, {
+    sendMessageMutation({ author, content: message }, {
       onSuccess: (data) => {
         console.log(data)
       }
@@ -104,7 +116,7 @@ const ChatRoom: NextPage = () => {
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
       <div className="w-[800px] h-[100vh]  flex flex-col gap-10 p-10 relative z-0">
         <div ref={scrollableRef} className="grow w-full h-full p-5 relative overflow-auto z-10 hide-scrollbar">
-          {renderMessages('john')}
+          {renderMessages(author)}
         </div>
         <div className="bg-slate-900 rounded-xl grow opacity-20 p-5 absolute z-0 left-5 right-5 top-5 bottom-5">
         </div>
