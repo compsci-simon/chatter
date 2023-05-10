@@ -14,6 +14,7 @@ datasource db {
 model Post {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
+    chatroom  String
     author    String
     content   String
 }
