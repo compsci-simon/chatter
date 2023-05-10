@@ -19,10 +19,10 @@ export const messageRouter = createTRPCRouter({
   onAdd: publicProcedure.subscription(() => {
     return observable<Post>((emit) => {
       const onAdd = (data: Post) => emit.next(data)
-      ee.on('add', onAdd)
+      ee.on('onAdd', onAdd)
 
       return () => {
-        ee.off('add', onAdd)
+        ee.off('onAdd', onAdd)
       }
     })
   })
