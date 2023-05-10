@@ -5,6 +5,7 @@ import Button from "~/components/Button";
 import TextField from "~/components/TextField";
 import { api } from "~/utils/api";
 import { Post } from "@prisma/client";
+import { useRouter } from "next/router";
 
 let m: Post[] = [
   {
@@ -34,10 +35,14 @@ let m: Post[] = [
 ]
 m = Array.from({ length: 10 }, () => m).flat()
 const ChatRoom: NextPage = () => {
+  const router = useRouter()
   const scrollableRef = useRef<HTMLDivElement>(null)
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState(m)
   const { mutate: sendMessageMutation } = api.message.send.useMutation()
+
+  const { username } = router.query
+  console.log('username', username)
 
   const scrollToBottom = () => {
     if (scrollableRef.current) {
@@ -71,14 +76,21 @@ const ChatRoom: NextPage = () => {
   }
 
   useEffect(() => {
-    scrollToBottom()
-  }, [])
-  // subscribe to new posts and add
-  api.message.onAdd.useSubscription(undefined, {
-    onData(data) {
-      setMessages([...messages, data])
+    if (!username) {
+      router.push('/')
     }
-  })
+    scrollToBottom()
+  }, [username])
+  // subscribe to new posts and add
+  // api.message.onAdd.useSubscription(undefined, {
+  //   onData(data) {
+  //     setMessages([...messages, data])
+  //   },
+  //   onError(err) {
+  //     console.error('Subscription error:', err);
+  //     // we might have missed a message - invalidate cache
+  //   },
+  // })
 
   const sendMessage = () => {
     sendMessageMutation({ author: 'john', content: message }, {
