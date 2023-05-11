@@ -5,7 +5,7 @@ import { IncomingMessage } from 'http'
 import ws from 'ws'
 import { prisma } from "~/server/db";
 
-export const createContext = async (
+export const createContext = (
   opts:
     | trpcNext.CreateNextContextOptions
     | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>,
