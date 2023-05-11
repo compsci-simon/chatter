@@ -86,26 +86,26 @@ const ChatRoom: NextPage = () => {
 
   useEffect(() => {
     if (!usernameParam) {
-      router.push('/')
+      void router.push('/')
     } else if (usernameParam) {
       if (Array.isArray(usernameParam)) {
         if (typeof (usernameParam[0]) === 'string' && usernameParam[0]) {
           setAuthor(usernameParam[0])
         } else {
-          router.push('/')
+          void router.push('/')
         }
       } else {
         setAuthor(usernameParam)
       }
     }
     if (!chatroomParam) {
-      router.push('/')
+      void router.push('/')
     } else if (chatroomParam) {
       if (Array.isArray(chatroomParam)) {
         if (typeof (chatroomParam[0]) === 'string' && chatroomParam[0]) {
           setChatroom(chatroomParam[0])
         } else {
-          router.push('/')
+          void router.push('/')
         }
       } else {
         setChatroom(chatroomParam)
