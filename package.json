@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "NODE_ENV=production next build",
     "dev:wss": "cross-env PORT=3001 NODE_ENV=development tsx watch src/server/wssServer.ts --tsconfig tsconfig.server.json",
     "dev:next": "next dev",
     "dev": "npm-run-all dev:*",

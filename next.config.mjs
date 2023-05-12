@@ -7,7 +7,7 @@ await import("./src/env.mjs");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-
+  output: "standalone",
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
    * out.
@@ -20,7 +20,9 @@ const config = {
   },
   publicRuntimeConfig: {
     WS_URL: 'ws://localhost:3001',
-    APP_URL: 'http://localhost:300'
+    APP_URL: 'http://localhost:3000',
+    srcDir: 'server'
   }
+
 };
 export default config;
