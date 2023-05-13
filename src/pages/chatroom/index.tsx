@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { NextPage } from "next";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Button from "~/components/Button";
 import TextField from "~/components/TextField";
 import { api } from "~/utils/api";
@@ -8,19 +8,20 @@ import { Post } from "@prisma/client";
 import { useRouter } from "next/router";
 
 const ChatRoom: NextPage = () => {
+  const router = useRouter()
+  const scrollableRef = useRef<HTMLDivElement>(null)
   const postsQuery = api.message.infinite.useInfiniteQuery({},
     {
-      getPreviousPageParam: (d) => d.prevCursor
+      getPreviousPageParam: (d) => d.prevCursor,
+      onSuccess(data) {
+        console.log('data', data)
+      },
     }
   )
-  const { hasPreviousPage, isFetchingPreviousPage, fetchPreviousPage } = postsQuery
   const [messages, setMessages] = useState<Post[]>(() => {
     const msgs = postsQuery.data?.pages.map(page => page.items).flat() ?? []
     return msgs
   })
-
-  const scrollableRef = useRef<HTMLDivElement>(null)
-
   const addMessages = useCallback((incoming?: Post[]) => {
     setMessages((current) => {
       const map: Record<Post['id'], Post> = {}
@@ -35,13 +36,6 @@ const ChatRoom: NextPage = () => {
       )
     })
   }, [])
-
-  useEffect(() => {
-    const msgs = postsQuery.data?.pages.map(page => page.items).flat()
-    addMessages(msgs)
-  }, [postsQuery.data?.pages, addMessages])
-
-  const router = useRouter()
   const [message, setMessage] = useState('')
   const [author, setAuthor] = useState<string>('')
   const [chatroom, setChatroom] = useState<string>('')
@@ -60,7 +54,7 @@ const ChatRoom: NextPage = () => {
     }
   }, [scrollableRef])
 
-  const renderMessages = (username: string) => {
+  const renderMessages = useCallback((username: string) => {
     return <div className="flex flex-col gap-5">
       {messages.map((message, index) => {
         const outerClasses = classnames('w-full flex',
@@ -82,8 +76,13 @@ const ChatRoom: NextPage = () => {
         </div>
       })}
     </div>
-  }
+  }, [])
 
+
+  useEffect(() => {
+    const msgs = postsQuery.data?.pages.map(page => page.items).flat()
+    addMessages(msgs)
+  }, [postsQuery.data?.pages, addMessages])
   useEffect(() => {
     if (!usernameParam) {
       void router.push('/')
