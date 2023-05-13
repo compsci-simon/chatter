@@ -21,8 +21,6 @@ const config = {
   publicRuntimeConfig: {
     WS_URL: 'ws://localhost:3001',
     APP_URL: 'http://localhost:3000',
-    srcDir: 'server'
   }
-
 };
 export default config;
