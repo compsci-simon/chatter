@@ -22,6 +22,7 @@ export const messageRouter = createTRPCRouter({
       take: z.number().min(1).max(50).nullish()
     }))
     .query(async ({ ctx, input }) => {
+      console.log('called infinite query.')
       const take = input.take ?? 10
       const cursor = input.cursor
       const page = await ctx.prisma.post.findMany({
@@ -55,5 +56,9 @@ export const messageRouter = createTRPCRouter({
         ee.off('onAdd', onAdd)
       }
     })
+  }),
+  test: publicProcedure.query(() => {
+    console.log('serverside, test is working')
+    return 'Hi there. This is working'
   })
 })
