@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "NODE_ENV=production next build",
+    "build:1-next": "cross-env NODE_ENV=production next build",
+    "build:2-server": "tsc --project tsconfig.server.json",
+    "build": "run-s build:*",
     "dev:wss": "cross-env PORT=3001 NODE_ENV=development tsx watch src/server/wssServer.ts --tsconfig tsconfig.server.json",
     "dev:next": "next dev",
     "dev": "npm-run-all dev:*",
@@ -30,6 +32,7 @@
     "npm-run-all": "^4.1.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "run-p": "^0.0.0",
     "superjson": "1.12.2",
     "tsx": "^3.12.7",
     "ws": "^8.13.0",
