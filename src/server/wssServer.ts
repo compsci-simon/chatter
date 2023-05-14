@@ -7,11 +7,14 @@ const port = 3001
 const wss = new ws.Server({
   port
 })
+const handler = applyWSSHandler({ wss, router: appRouter, createContext });
 
-
-wss.on('connection', (ws) => {
+wss.on('connection', (socket) => {
   console.log(`➕➕ Connection (${wss.clients.size})`)
-  ws.once('close', () => {
+  socket.on('message', message => {
+    console.log('message received: %s', message);
+  })
+  socket.once('close', () => {
     console.log(`➖➖ Connection (${wss.clients.size})`)
   })
 })
@@ -19,5 +22,6 @@ console.log(`✅ WebSocket Server listening on ws://localhost:${port}`)
 
 process.on('SIGTERM', () => {
   console.log('SIGTERM')
+  handler.broadcastReconnectNotification()
   wss.close()
 })
