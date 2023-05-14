@@ -2,8 +2,8 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
-import Button from "~/components/Button";
-import TextField from "~/components/TextField";
+import Button from "../components/Button";
+import TextField from "../components/TextField";
 
 const Home: NextPage = () => {
   const [name, setName] = useState('')

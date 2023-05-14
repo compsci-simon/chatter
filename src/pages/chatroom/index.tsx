@@ -1,9 +1,9 @@
 import classnames from "classnames";
 import { NextPage } from "next";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Button from "~/components/Button";
-import TextField from "~/components/TextField";
-import { api } from "~/utils/api";
+import Button from "../../components/Button";
+import TextField from "../../components/TextField";
+import { api } from "../../utils/api";
 import { Post } from "@prisma/client";
 import { useRouter } from "next/router";
 
