@@ -124,11 +124,7 @@ const ChatRoom: NextPage = () => {
 
   const sendMessage = () => {
     setMessage('')
-    sendMessageMutation({ author, content: message, chatroom }, {
-      onSuccess: (data) => {
-        console.log(data)
-      }
-    })
+    sendMessageMutation({ author, content: message, chatroom })
   }
 
   return (
