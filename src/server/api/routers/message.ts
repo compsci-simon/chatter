@@ -57,8 +57,4 @@ export const messageRouter = createTRPCRouter({
       }
     })
   }),
-  test: publicProcedure.query(() => {
-    console.log('serverside, test is working')
-    return 'Hi there. This is working'
-  })
 })
