@@ -22,7 +22,6 @@ export const messageRouter = createTRPCRouter({
       take: z.number().min(1).max(50).nullish()
     }))
     .query(async ({ ctx, input }) => {
-      console.log('called infinite query.')
       const take = input.take ?? 10
       const cursor = input.cursor
       const page = await ctx.prisma.post.findMany({

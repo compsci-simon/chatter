@@ -51,7 +51,7 @@ const ChatRoom: NextPage = () => {
     }
   }, [scrollableRef])
 
-  const renderMessages = useCallback((username: string) => {
+  const renderMessages = (username: string) => {
     return <div className="flex flex-col gap-5">
       {messages.map((message, index) => {
         const outerClasses = classnames('w-full flex',
@@ -73,7 +73,7 @@ const ChatRoom: NextPage = () => {
         </div>
       })}
     </div>
-  }, [])
+  }
 
 
   useEffect(() => {
