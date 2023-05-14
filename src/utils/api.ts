@@ -7,7 +7,6 @@
 import { httpBatchLink, loggerLink, createWSClient, wsLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
-import { Runtime } from "inspector";
 import { NextPageContext } from "next";
 import getConfig from "next/config";
 import superjson from "superjson";
@@ -25,14 +24,8 @@ const { publicRuntimeConfig }: {
 
 const { APP_URL, WS_URL } = publicRuntimeConfig
 
-const getBaseUrl = () => {
-  if (typeof window !== "undefined") return ""; // browser should use relative url
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
-  return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
-};
-
 function getEndingLink(ctx: NextPageContext | undefined) {
-  if (typeof window === undefined) {
+  if (typeof window === 'undefined') {
     return httpBatchLink({
       url: `${APP_URL}/api/trpc`,
       headers() {
@@ -45,7 +38,6 @@ function getEndingLink(ctx: NextPageContext | undefined) {
       },
     })
   }
-
   const client = createWSClient({
     url: WS_URL
   })
