@@ -74,8 +74,6 @@ const ChatRoom: NextPage = () => {
       })}
     </div>
   }, [])
-  const { data } = api.message.test.useQuery()
-  console.log('data = ', data)
 
 
   useEffect(() => {
