@@ -13,9 +13,6 @@ const ChatRoom: NextPage = () => {
   const postsQuery = api.message.infinite.useInfiniteQuery({},
     {
       getPreviousPageParam: (d) => d.prevCursor,
-      onSuccess(data) {
-        console.log('data', data)
-      },
     }
   )
   const [messages, setMessages] = useState<Post[]>(() => {
