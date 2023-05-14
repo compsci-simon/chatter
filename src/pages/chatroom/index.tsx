@@ -63,8 +63,8 @@ const ChatRoom: NextPage = () => {
         )
         return <div key={index} role='scrollable-content' className={outerClasses}>
           <div className={innerClasses}>
-            <span className="font-light text-xs">
-              {message.author} - {message.createdAt.toUTCString()}
+            <span className="font-light text-xs text-slate-700">
+              <span className="font-semibold">{message.author}</span> - {message.createdAt.toUTCString()}
             </span>
             <p>
               {message.content}
