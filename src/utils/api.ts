@@ -12,10 +12,6 @@ import superjson from "superjson";
 
 import { type AppRouter } from "../server/api/root";
 
-interface RuntimeConfig {
-  APP_URL: string;
-  WS_URL: string;
-}
 const APP_URL = process.env.APP_URL ?? 'http://localhost:3000'
 const WS_URL = process.env.WS_URL ?? 'ws://localhost:3001'
 
