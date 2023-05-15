@@ -11,9 +11,18 @@ import { NextPageContext } from "next";
 import superjson from "superjson";
 
 import { type AppRouter } from "../server/api/root";
+import getConfig from "next/config";
 
-const APP_URL = process.env.APP_URL ?? 'http://localhost:3000'
-const WS_URL = process.env.WS_URL ?? 'ws://localhost:3001'
+interface RuntimeConfig {
+  APP_URL: string;
+  WS_URL: string;
+}
+
+const { publicRuntimeConfig }: {
+  publicRuntimeConfig: RuntimeConfig
+} = getConfig() as { publicRuntimeConfig: RuntimeConfig }
+
+const { APP_URL, WS_URL } = publicRuntimeConfig;
 
 function getEndingLink(ctx: NextPageContext | undefined) {
   if (typeof window === 'undefined') {
