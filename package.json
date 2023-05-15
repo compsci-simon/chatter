@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "build:1-next": "cross-env NODE_ENV=production next build",
-    "build:2-server": "tsc --project tsconfig.server.json",
+    "build:2-server": "cross-env tsc --project tsconfig.server.json",
     "build": "run-s build:*",
-    "dev:wss": "cross-env PORT=3001 NODE_ENV=development tsx watch src/server/wssServer.ts --tsconfig tsconfig.server.json",
+    "dev:wss": "cross-env NODE_ENV=development tsx watch src/server/wssServer.ts --tsconfig tsconfig.server.json",
     "dev:next": "next dev",
     "dev": "npm-run-all dev:*",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "cross-env NODE_ENV=production node dist/server/prodServer.js"
+    "start": "cross-env NODE_ENV=production APP_URL=http://localhost:80 WS_URL=ws://localhost:80 PORT=80 node dist/server/prodServer.js"
   },
   "prettier": {
     "printWidth": 80,
