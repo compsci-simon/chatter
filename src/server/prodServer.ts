@@ -6,7 +6,7 @@ import ws from 'ws'
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import { appRouter } from "./api/root";
 
-const port = 3001 ?? parseInt(process.env.PORT || '3000', 10)
+const port = parseInt(process.env.PORT || '3000', 10)
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
