@@ -3,7 +3,7 @@ import { applyWSSHandler } from '@trpc/server/adapters/ws'
 import ws from 'ws'
 import { createContext } from "./context";
 
-const port = 3000
+const port = 3001
 const wss = new ws.Server({
   port
 })
