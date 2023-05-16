@@ -32,19 +32,21 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV APP_URL http://localhost:80
 ENV WS_URL ws://localhost:80
-ENV DATABASE_URL file:./db.sqlite
+ENV DATABASE_URL file:/app/db.sqlite
 
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY ./prisma/db.sqlite ./db.sqlite
+COPY --chown=nextjs:nodejs ./prisma/db.sqlite ./db.sqlite
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/package.json ./package.json
+
+RUN chown -R nextjs:node /app
 
 USER nextjs
 EXPOSE 80
