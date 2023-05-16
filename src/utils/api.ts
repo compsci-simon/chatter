@@ -39,7 +39,7 @@ function getEndingLink(ctx: NextPageContext | undefined) {
     })
   }
   const client = createWSClient({
-    url: WS_URL
+    url: WS_URL ?? 'ws://localhost:80'
   })
   return wsLink<AppRouter>({
     client
