@@ -77,6 +77,11 @@ const ChatRoom: NextPage = () => {
   useEffect(() => {
     const msgs = postsQuery.data?.pages.map(page => page.items).flat()
     addMessages(msgs)
+    setTimeout(() => {
+      if (postsQuery.hasPreviousPage) {
+        postsQuery.fetchPreviousPage()
+      }
+    }, 1000)
   }, [postsQuery.data?.pages, addMessages])
   useEffect(() => {
     if (!usernameParam) {
