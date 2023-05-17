@@ -50,9 +50,8 @@ const ChatRoom: NextPage = () => {
       })
     }
   }, [scrollableRef])
-
   const renderMessages = (username: string) => {
-    return <div className="flex flex-col gap-5">
+    return <div ref={scrollableRef} className="flex flex-col gap-5">
       {messages.map((message, index) => {
         const outerClasses = classnames('w-full flex',
           { 'justify-end': message.author === username },
@@ -74,7 +73,6 @@ const ChatRoom: NextPage = () => {
       })}
     </div>
   }
-
 
   useEffect(() => {
     const msgs = postsQuery.data?.pages.map(page => page.items).flat()
@@ -110,7 +108,7 @@ const ChatRoom: NextPage = () => {
   }, [usernameParam, chatroomParam])
   useEffect(() => {
     scrollToBottomOfList()
-  }, [])
+  }, [messages])
   // subscribe to new posts and add
   api.message.onAdd.useSubscription(undefined, {
     onData(data) {
@@ -130,7 +128,7 @@ const ChatRoom: NextPage = () => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
       <div className="w-[800px] h-[100vh]  flex flex-col gap-10 p-10 relative z-0">
-        <div ref={scrollableRef} className="grow w-full h-full p-5 relative overflow-auto z-10 hide-scrollbar">
+        <div className="grow w-full h-full p-5 relative overflow-auto z-10 hide-scrollbar">
           {renderMessages(author)}
         </div>
         <div className="bg-slate-900 rounded-xl grow opacity-20 p-5 absolute z-0 left-5 right-5 top-5 bottom-5">
