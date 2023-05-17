@@ -79,7 +79,7 @@ const ChatRoom: NextPage = () => {
     addMessages(msgs)
     setTimeout(() => {
       if (postsQuery.hasPreviousPage) {
-        postsQuery.fetchPreviousPage()
+        void postsQuery.fetchPreviousPage()
       }
     }, 1000)
   }, [postsQuery.data?.pages, addMessages])
