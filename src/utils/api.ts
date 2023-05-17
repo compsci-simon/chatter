@@ -14,20 +14,19 @@ import { type AppRouter } from "../server/api/root";
 import getConfig from "next/config";
 
 interface RuntimeConfig {
-  APP_URL: string;
-  WS_URL: string;
+  HOST: string
 }
 
 const { publicRuntimeConfig }: {
   publicRuntimeConfig: RuntimeConfig
 } = getConfig() as { publicRuntimeConfig: RuntimeConfig }
 
-const { APP_URL, WS_URL } = publicRuntimeConfig;
+const { HOST } = publicRuntimeConfig;
 
 function getEndingLink(ctx: NextPageContext | undefined) {
   if (typeof window === 'undefined') {
     return httpBatchLink({
-      url: `${APP_URL}/api/trpc`,
+      url: `http:${HOST}:80/api/trpc`,
       headers() {
         if (!ctx?.req?.headers) {
           return {}
@@ -39,7 +38,7 @@ function getEndingLink(ctx: NextPageContext | undefined) {
     })
   }
   const client = createWSClient({
-    url: WS_URL ?? 'ws://localhost:80'
+    url: `ws://${HOST}:80`
   })
   return wsLink<AppRouter>({
     client

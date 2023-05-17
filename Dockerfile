@@ -30,7 +30,7 @@ FROM --platform=linux/amd64 node:18-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV APP_URL http://localhost:80
+ENV NEXT_PUBLIC_APP_URL http://localhost:80
 ENV WS_URL ws://localhost:80
 ENV DATABASE_URL file:/app/db.sqlite
 
@@ -52,4 +52,4 @@ USER nextjs
 EXPOSE 80
 ENV PORT 80
 
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/server/prodServer.js"]

@@ -36,6 +36,10 @@ void app.prepare().then(() => {
   server.listen(port)
 
   // tslint:disable-next-line:no-console
+  console.log('process.env.APP_URL', process.env.APP_URL)
+  console.log('process.env.WS_URL', process.env.WS_URL)
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+  console.log('process.env.DATABASE_URL', process.env.DATABASE_URL)
   console.log(
     `> Server listening at http://localhost:${port} as ${dev ? 'development' : process.env.NODE_ENV}`,
   );
