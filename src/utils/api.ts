@@ -15,18 +15,20 @@ import getConfig from "next/config";
 
 interface RuntimeConfig {
   HOST: string
+  NEXT_PORT: string
+  WSS_PORT: string
 }
 
 const { publicRuntimeConfig }: {
   publicRuntimeConfig: RuntimeConfig
 } = getConfig() as { publicRuntimeConfig: RuntimeConfig }
 
-const { HOST } = publicRuntimeConfig;
+const { HOST, NEXT_PORT, WSS_PORT } = publicRuntimeConfig;
 
 function getEndingLink(ctx: NextPageContext | undefined) {
   if (typeof window === 'undefined') {
     return httpBatchLink({
-      url: `http:${HOST}:80/api/trpc`,
+      url: `http:${HOST}:${NEXT_PORT}/api/trpc`,
       headers() {
         if (!ctx?.req?.headers) {
           return {}
@@ -38,7 +40,7 @@ function getEndingLink(ctx: NextPageContext | undefined) {
     })
   }
   const client = createWSClient({
-    url: `ws://${HOST}:80`
+    url: `ws://${HOST}:${WSS_PORT}`
   })
   return wsLink<AppRouter>({
     client
