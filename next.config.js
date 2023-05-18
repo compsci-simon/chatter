@@ -4,9 +4,9 @@ module.exports = {
   },
   publicRuntimeConfig: {
     // Will be available on both server and client
-    HOST: 'chatter.simonsteven.io',
-    NEXT_PORT: '80',
-    WSS_PORT: '80'
+    HOST: 'localhost',
+    NEXT_PORT: '3000',
+    WSS_PORT: '3001'
   },
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
