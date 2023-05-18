@@ -131,14 +131,14 @@ const ChatRoom: NextPage = () => {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-      <div className="w-[800px] h-[100vh]  flex flex-col gap-10 p-10 relative z-0">
+      <div className="lg:w-[800px] w-full h-[100vh]  flex flex-col gap-10 p-10 relative z-0">
         <div className="grow w-full h-full p-5 relative overflow-auto z-10 hide-scrollbar">
           {renderMessages(author)}
         </div>
         <div className="bg-slate-900 rounded-xl grow opacity-20 p-5 absolute z-0 left-5 right-5 top-5 bottom-5">
         </div>
         <div className="flex gap-5 justify-end z-10">
-          <TextField value={message} submithandler={sendMessage} onChange={e => setMessage(e.target.value)} />
+          <TextField placeholder="Say something" value={message} submithandler={sendMessage} onChange={e => setMessage(e.target.value)} />
           <Button onClick={sendMessage}>Send</Button>
         </div>
       </div>
