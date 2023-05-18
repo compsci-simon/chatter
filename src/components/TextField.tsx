@@ -4,15 +4,15 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   submithandler?: () => void
 }
 
-const TextField: FC<TextFieldProps> = (props) => {
+const TextField: FC<TextFieldProps> = ({ submithandler, ...rest }) => {
 
   const keypress = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && props.submithandler) {
-      props.submithandler()
+    if (event.key === 'Enter' && submithandler) {
+      submithandler()
     }
   }
   return (
-    <input {...props} onKeyDown={keypress} className='p-2 outline-violet-500 rounded-md text-lg font-light border border-slate-100 w-full' />
+    <input {...rest} onKeyDown={keypress} className='p-2 outline-violet-500 rounded-md text-lg font-light border border-slate-100 w-full' />
   )
 }
 
