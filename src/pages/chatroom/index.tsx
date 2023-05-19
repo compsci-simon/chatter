@@ -10,15 +10,6 @@ import { useRouter } from "next/router";
 const ChatRoom: NextPage = () => {
   const router = useRouter()
   const scrollableRef = useRef<HTMLDivElement>(null)
-  const postsQuery = api.message.infinite.useInfiniteQuery({},
-    {
-      getPreviousPageParam: (d) => d.prevCursor,
-    }
-  )
-  const [messages, setMessages] = useState<Post[]>(() => {
-    const msgs = postsQuery.data?.pages.map(page => page.items).flat() ?? []
-    return msgs
-  })
   const addMessages = useCallback((incoming?: Post[]) => {
     setMessages((current) => {
       const map: Record<Post['id'], Post> = {}
@@ -36,6 +27,15 @@ const ChatRoom: NextPage = () => {
   const [message, setMessage] = useState('')
   const [author, setAuthor] = useState<string>('')
   const [chatroom, setChatroom] = useState<string>('')
+  const postsQuery = api.message.infinite.useInfiniteQuery({ chatroom },
+    {
+      getPreviousPageParam: (d) => d.prevCursor,
+    }
+  )
+  const [messages, setMessages] = useState<Post[]>(() => {
+    const msgs = postsQuery.data?.pages.map(page => page.items).flat() ?? []
+    return msgs
+  })
   const { mutate: sendMessageMutation } = api.message.send.useMutation()
   const { username: usernameParam, chatroom: chatroomParam } = router.query
 
@@ -116,7 +116,9 @@ const ChatRoom: NextPage = () => {
   // subscribe to new posts and add
   api.message.onAdd.useSubscription(undefined, {
     onData(data) {
-      setMessages([...messages, data])
+      if (data.chatroom === chatroom) {
+        setMessages([...messages, data])
+      }
     },
     onError(err) {
       console.error('Subscription error:', err);

@@ -18,13 +18,18 @@ export const messageRouter = createTRPCRouter({
     }),
   infinite: publicProcedure
     .input(z.object({
+      chatroom: z.string(),
       cursor: z.string().nullish(),
       take: z.number().min(1).max(50).nullish()
     }))
     .query(async ({ ctx, input }) => {
       const take = input.take ?? 10
       const cursor = input.cursor
+      const chatroom = input.chatroom
       const page = await ctx.prisma.post.findMany({
+        where: {
+          chatroom
+        },
         orderBy: {
           createdAt: 'desc'
         },
