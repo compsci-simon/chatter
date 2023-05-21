@@ -1,12 +1,9 @@
 module.exports = {
-  serverRuntimeConfig: {
-    // Will only be available on the server side
-  },
   publicRuntimeConfig: {
     // Will be available on both server and client
-    HOST: 'localhost',
-    NEXT_PORT: '3000',
-    WSS_PORT: '3001'
+    NEXT_PUBLIC_HOST: process.env.NEXT_PUBLIC_HOST,
+    NEXT_PUBLIC_HTTP_PORT: process.env.NEXT_PUBLIC_HTTP_PORT,
+    NEXT_PUBLIC_WSS_PORT: process.env.NEXT_PUBLIC_WSS_PORT
   },
   /** We run eslint as a separate task in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },

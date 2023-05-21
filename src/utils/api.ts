@@ -14,21 +14,20 @@ import { type AppRouter } from "../server/api/root";
 import getConfig from "next/config";
 
 interface RuntimeConfig {
-  HOST: string
-  NEXT_PORT: string
-  WSS_PORT: string
+  NEXT_PUBLIC_HOST: string
+  NEXT_PUBLIC_HTTP_PORT: string
+  NEXT_PUBLIC_WSS_PORT: string
 }
 
 const { publicRuntimeConfig }: {
   publicRuntimeConfig: RuntimeConfig
 } = getConfig() as { publicRuntimeConfig: RuntimeConfig }
 
-const { HOST, NEXT_PORT, WSS_PORT } = publicRuntimeConfig;
-
+const { NEXT_PUBLIC_HOST, NEXT_PUBLIC_HTTP_PORT, NEXT_PUBLIC_WSS_PORT } = publicRuntimeConfig;
 function getEndingLink(ctx: NextPageContext | undefined) {
   if (typeof window === 'undefined') {
     return httpBatchLink({
-      url: `http:${HOST}:${NEXT_PORT}/api/trpc`,
+      url: `http:${NEXT_PUBLIC_HOST}:${NEXT_PUBLIC_HTTP_PORT}/api/trpc`,
       headers() {
         if (!ctx?.req?.headers) {
           return {}
@@ -40,7 +39,7 @@ function getEndingLink(ctx: NextPageContext | undefined) {
     })
   }
   const client = createWSClient({
-    url: `ws://${HOST}:${WSS_PORT}`
+    url: `ws://${NEXT_PUBLIC_HOST}:${NEXT_PUBLIC_WSS_PORT}`
   })
   return wsLink<AppRouter>({
     client
