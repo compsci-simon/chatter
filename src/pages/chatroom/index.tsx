@@ -7,7 +7,8 @@ import { api } from "../../utils/api";
 import { Post } from "@prisma/client";
 import { useRouter } from "next/router";
 import Filter from 'bad-words'
-let filter = new Filter()
+
+const filter = new Filter()
 
 const ChatRoom: NextPage = () => {
   const router = useRouter()

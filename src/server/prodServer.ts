@@ -7,8 +7,12 @@ import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import { appRouter } from "./api/root";
 import getConfig from "next/config";
 
+type PublicRuntimeType = {
+  HOST: string
+  NEXT_PORT: string
+}
 const dev = process.env.NODE_ENV !== 'production'
-const publicRuntime = getConfig()
+const publicRuntime: PublicRuntimeType = getConfig() as PublicRuntimeType
 const { HOST, NEXT_PORT } = publicRuntime
 const app = next({ dev })
 const handle = app.getRequestHandler()
