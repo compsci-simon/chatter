@@ -5,23 +5,16 @@ import { parse } from 'url'
 import ws from 'ws'
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import { appRouter } from "./api/root";
+import getConfig from "next/config";
 
-const port = parseInt(process.env.PORT || '3000', 10)
 const dev = process.env.NODE_ENV !== 'production'
+const publicRuntime = getConfig()
+const { HOST, NEXT_PORT } = publicRuntime
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
 void app.prepare().then(() => {
   const server = http.createServer((req, res) => {
-    // const proto = req.headers['x-forwarded-proto']
-    // if (proto && proto === 'http') {
-    //   res.writeHead(303, {
-    //     location: `https://` + req.headers.host ?? '' + (req.headers.url ?? ''),
-    //   })
-    //   res.end()
-    //   return
-    // }
-
     const parsedUrl = parse(req.url!, true)
     void handle(req, res, parsedUrl)
   })
@@ -33,14 +26,10 @@ void app.prepare().then(() => {
     console.log('SIGTERM')
     handler.broadcastReconnectNotification()
   })
-  server.listen(port)
+  server.listen(NEXT_PORT)
 
   // tslint:disable-next-line:no-console
-  console.log('process.env.APP_URL', process.env.APP_URL)
-  console.log('process.env.WS_URL', process.env.WS_URL)
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-  console.log('process.env.DATABASE_URL', process.env.DATABASE_URL)
   console.log(
-    `> Server listening at http://localhost:${port} as ${dev ? 'development' : process.env.NODE_ENV}`,
+    `> Server listening at http://${HOST}:${NEXT_PORT} as ${dev ? 'development' : process.env.NODE_ENV}`,
   );
 })
