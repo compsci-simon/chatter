@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { NextPage } from "next";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
 import TextField from "../../components/TextField";
 import { api } from "../../utils/api";
