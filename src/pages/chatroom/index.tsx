@@ -114,11 +114,9 @@ const ChatRoom: NextPage = () => {
     scrollToBottomOfList()
   }, [messages])
   // subscribe to new posts and add
-  api.message.onAdd.useSubscription(undefined, {
+  api.message.onAdd.useSubscription({ chatroom }, {
     onData(data) {
-      if (data.chatroom === chatroom) {
-        setMessages([...messages, data])
-      }
+      setMessages([...messages, data])
     },
     onError(err) {
       console.error('Subscription error:', err);
