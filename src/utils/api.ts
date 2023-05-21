@@ -51,6 +51,14 @@ function getEndingLink(ctx: NextPageContext | undefined) {
 export const api = createTRPCNext<AppRouter>({
   config({ ctx }) {
     return {
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            networkMode:
+              process.env.NODE_ENV === "development" ? "always" : "online",
+          },
+        },
+      },
       /**
        * Transformer used for data de-serialization from the server.
        *
