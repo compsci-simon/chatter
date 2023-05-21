@@ -57,6 +57,10 @@ export const api = createTRPCNext<AppRouter>({
             networkMode:
               process.env.NODE_ENV === "development" ? "always" : "online",
           },
+          mutations: {
+            networkMode:
+              process.env.NODE_ENV === "development" ? "always" : "online",
+          }
         },
       },
       /**
