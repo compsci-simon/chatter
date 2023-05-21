@@ -3,6 +3,7 @@ import EventEmitter from "events";
 import { z } from "zod";
 import { Post } from "@prisma/client";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import { copyFileSync } from "fs";
 
 const ee = new EventEmitter()
 
@@ -51,14 +52,20 @@ export const messageRouter = createTRPCRouter({
         prevCursor
       }
     }),
-  onAdd: publicProcedure.subscription(() => {
-    return observable<Post>((emit) => {
-      const onAdd = (data: Post) => emit.next(data)
-      ee.on('onAdd', onAdd)
+  onAdd: publicProcedure
+    .input(z.object({ chatroom: z.string() }))
+    .subscription(({ input }) => {
+      return observable<Post>((emit) => {
+        const onAdd = (data: Post) => {
+          if (input.chatroom === data.chatroom) {
+            emit.next(data)
+          }
+        }
+        ee.on('onAdd', onAdd)
 
-      return () => {
-        ee.off('onAdd', onAdd)
-      }
+        return () => {
+          ee.off('onAdd', onAdd)
+        }
+      })
     })
-  }),
 })
