@@ -22,6 +22,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ENV NODE_ENV production
+
 RUN npm run build
 
 ##### RUNNER
@@ -30,17 +32,19 @@ FROM --platform=linux/amd64 node:18-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV NEXT_PUBLIC_APP_URL http://localhost:80
-ENV WS_URL ws://localhost:80
 ENV DATABASE_URL file:/app/db.sqlite
-
+ENV NEXT_PUBLIC_HOST chatter.simonsteven.io
+ENV NEXT_PUBLIC_HTTP_PORT 80
+ENV NEXT_PUBLIC_WSS_PORT 80
+ENV NEXT_PUBLIC_PORT 80
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --chown=nextjs:nodejs ./prisma/db.sqlite ./db.sqlite
+COPY prisma/db.sqlite ./db.sqlite
+COPY .env.production ./
+COPY next.config.js ./
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
@@ -52,4 +56,4 @@ USER nextjs
 EXPOSE 80
 ENV PORT 80
 
-CMD ["node", "dist/server/prodServer.js"]
+CMD ["npm", "run", "start"]
